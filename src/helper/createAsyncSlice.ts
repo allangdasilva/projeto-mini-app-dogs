@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { AppDispatch } from "../redux/configureStore";
 
 interface InitialState<T> {
   loading: boolean;
@@ -41,7 +42,21 @@ const createAsyncSlice = <T, A = any>(config: SliceConfig<T, A>) => {
     },
   });
   const { fetchStarted, fetchSuccess, fetchError } = slice.actions;
-  return { ...slice };
+
+  const asyncAction = (payload: A) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(fetchStarted());
+      const { url, options } = config.fetchConfig(payload);
+      const response = await fetch(url, options);
+      const data = await response.json();
+      return dispatch(fetchSuccess(data));
+    } catch (error) {
+      if (error instanceof Error) {
+        return dispatch(fetchError(error.message));
+      }
+    }
+  };
+  return { ...slice, asyncAction };
 };
 
 export default createAsyncSlice;

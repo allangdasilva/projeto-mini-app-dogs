@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { AppDispatch } from "../redux/configureStore";
+import type { LoginPayload } from "../redux/login";
 
-interface InitialState<T> {
+export interface InitialState<T> {
   loading: boolean;
   data: T | null;
   error: string | null;
 }
-interface SliceConfig<T, A = any> {
+interface SliceConfig<T, A = LoginPayload | string> {
   name: string;
   fetchConfig: (payload: A) => {
     url: string;
@@ -16,7 +17,9 @@ interface SliceConfig<T, A = any> {
   reducers?: Record<string, any>;
 }
 
-const createAsyncSlice = <T, A = any>(config: SliceConfig<T, A>) => {
+const createAsyncSlice = <T, A = LoginPayload | string>(
+  config: SliceConfig<T, A>
+) => {
   const slice = createSlice({
     name: config.name,
     initialState: {

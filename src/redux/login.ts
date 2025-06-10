@@ -1,8 +1,45 @@
-import { combineReducers } from "@reduxjs/toolkit";
-import createAsyncSlice from "../helper/createAsyncSlice";
+import { combineReducers, type PayloadAction } from "@reduxjs/toolkit";
+import createAsyncSlice, {
+  type InitialState,
+} from "../helper/createAsyncSlice";
+import type { AppDispatch, RootState } from "./configureStore";
 
-const token = createAsyncSlice({
+export interface LoginPayload {
+  username: string;
+  password: string;
+}
+interface TokenResponse {
+  token: string;
+}
+interface UserResponse {
+  email: string;
+  id: number;
+  nome: string;
+  username: string;
+}
+
+const token = createAsyncSlice<TokenResponse, LoginPayload>({
   name: "token",
+  initialState: {
+    data: {
+      token: "token",
+    },
+  },
+  reducers: {
+    fetchSuccess: {
+      reducer(state: any, action: PayloadAction) {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
+      },
+      prepare(payload: TokenResponse) {
+        return {
+          payload,
+          meta: { localStorage: { key: "token", value: payload.token } },
+        };
+      },
+    },
+  },
   fetchConfig: (payload) => ({
     url: "https://dogsapi.origamid.dev/json/jwt-auth/v1/token",
     options: {
@@ -14,7 +51,7 @@ const token = createAsyncSlice({
     },
   }),
 });
-const user = createAsyncSlice({
+const user = createAsyncSlice<UserResponse, string>({
   name: "user",
   fetchConfig: (payload) => ({
     url: "https://dogsapi.origamid.dev/json/api/user",
@@ -26,5 +63,28 @@ const user = createAsyncSlice({
     },
   }),
 });
+const fetchToken = token.asyncAction;
+const fetchUser = user.asyncAction;
+
+export const login = (user: LoginPayload) => async (dispatch: AppDispatch) => {
+  try {
+    const { payload } = (await dispatch(
+      fetchToken(user)
+    )) as PayloadAction<TokenResponse>;
+    if (payload.token !== undefined) await dispatch(fetchUser(payload.token));
+  } catch (error) {
+    if (error instanceof Error) throw new Error(`Erro: ${error.message}`);
+  }
+};
+
+export const autoLogin =
+  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+    const state = getState();
+    if (state.reducers.token.data) {
+      const { token } = state.reducers.token.data;
+      if (token) await dispatch(fetchUser(token));
+    }
+  };
+
 const reducers = combineReducers({ token: token.reducer, user: user.reducer });
 export default reducers;

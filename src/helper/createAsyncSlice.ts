@@ -42,6 +42,7 @@ const createAsyncSlice = <T, A = LoginPayload | string>(
         state.data = null;
         state.error = action.payload;
       },
+      ...config.reducers,
     },
   });
   const { fetchStarted, fetchSuccess, fetchError } = slice.actions;

@@ -3,6 +3,8 @@ import createAsyncSlice, {
   type InitialState,
 } from "../helper/createAsyncSlice";
 import type { AppDispatch, RootState } from "./configureStore";
+import getLocalStorage from "../helper/getLocalStorage";
+import photos from "./photos";
 
 export interface LoginPayload {
   username: string;
@@ -22,12 +24,15 @@ const token = createAsyncSlice<TokenResponse, LoginPayload>({
   name: "token",
   initialState: {
     data: {
-      token: "token",
+      token: getLocalStorage("token", null),
     },
   },
   reducers: {
     fetchSuccess: {
-      reducer(state: any, action: PayloadAction) {
+      reducer(
+        state: InitialState<TokenResponse>,
+        action: PayloadAction<TokenResponse>
+      ) {
         state.loading = false;
         state.data = action.payload;
         state.error = null;
@@ -77,6 +82,12 @@ export const login = (user: LoginPayload) => async (dispatch: AppDispatch) => {
   }
 };
 
+const reducers = combineReducers({
+  token: token.reducer,
+  user: user.reducer,
+  photos: photos.reducer,
+});
+
 export const autoLogin =
   () => async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
@@ -85,6 +96,4 @@ export const autoLogin =
       if (token) await dispatch(fetchUser(token));
     }
   };
-
-const reducers = combineReducers({ token: token.reducer, user: user.reducer });
 export default reducers;

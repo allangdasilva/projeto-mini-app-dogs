@@ -1,0 +1,23 @@
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin-bottom: 2rem;
+}
+.title {
+  font-size: 1rem;
+}
+.login {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid black;
+  background-color: white;
+  cursor: pointer;
+}
+.login.loading {
+  background-color: orange;
+}
+.login.loaded {
+  background-color: greenyellow;
+}

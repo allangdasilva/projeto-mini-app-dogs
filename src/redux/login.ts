@@ -28,6 +28,9 @@ const token = createAsyncSlice<TokenResponse, LoginPayload>({
     },
   },
   reducers: {
+    removeToken(state: InitialState<TokenResponse>) {
+      state.data = null;
+    },
     fetchSuccess: {
       reducer(
         state: InitialState<TokenResponse>,
@@ -58,6 +61,11 @@ const token = createAsyncSlice<TokenResponse, LoginPayload>({
 });
 const user = createAsyncSlice<UserResponse, string>({
   name: "user",
+  reducers: {
+    removeUser(state: InitialState<TokenResponse>) {
+      state.data = null;
+    },
+  },
   fetchConfig: (payload) => ({
     url: "https://dogsapi.origamid.dev/json/api/user",
     options: {
@@ -70,6 +78,9 @@ const user = createAsyncSlice<UserResponse, string>({
 });
 const fetchToken = token.asyncAction;
 const fetchUser = user.asyncAction;
+
+const { removeToken } = token.actions as any;
+const { removeUser } = user.actions as any;
 
 export const login = (user: LoginPayload) => async (dispatch: AppDispatch) => {
   try {
@@ -96,4 +107,9 @@ export const autoLogin =
       if (token) await dispatch(fetchUser(token));
     }
   };
+export const userLogout = () => (dispatch: AppDispatch) => {
+  dispatch(removeToken());
+  dispatch(removeUser());
+  window.localStorage.removeItem("token");
+};
 export default reducers;

@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../redux/configureStore";
 import { login } from "../redux/login";
+import style from "./Form.module.css";
 
 function Form() {
   const [username, setUsername] = React.useState("");
@@ -16,8 +17,11 @@ function Form() {
     <>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">Usuário</label>
+          <label className={style.label} htmlFor="username">
+            Usuário
+          </label>
           <input
+            className={style.input}
             type="text"
             name="username"
             id="username"
@@ -26,8 +30,11 @@ function Form() {
           />
         </div>
         <div>
-          <label htmlFor="password">Senha</label>
+          <label className={style.label} htmlFor="password">
+            Senha
+          </label>
           <input
+            className={style.input}
             type="password"
             name="password"
             id="password"
@@ -35,7 +42,7 @@ function Form() {
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button>Entrar</button>
+        <button className={style.button}>Entrar</button>
       </form>
     </>
   );

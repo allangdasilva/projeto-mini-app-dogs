@@ -1,0 +1,22 @@
+.label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.input {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+.button {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  padding: 0.75rem 2rem;
+  color: white;
+  background-color: black;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}

@@ -1,4 +1,3 @@
-import React from "react";
 import style from "./Header.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/configureStore";

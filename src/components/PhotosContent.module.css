@@ -1,0 +1,23 @@
+.item {
+  display: grid;
+  padding-right: 0.5rem;
+  grid-template-columns: 60px 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 3px;
+  background-color: #d1d1d1;
+}
+.img {
+  border-radius: 3px 0px 0px 3px;
+  width: 100%;
+}
+.title {
+  font-size: 1rem;
+  font-weight: normal;
+}
+.visits {
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #999;
+}
